@@ -10,15 +10,15 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.amos.order</groupId>
-    <artifactId>order</artifactId>
+    <groupId>com.amos.mall</groupId>
+    <artifactId>mall</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>order</name>
 
+    <name>ddd-mall</name>
 
     <modules>
+        <module>ddd-order</module>
         <module>ddd-inventory-api</module>
-        <module>ddd-order-core</module>
     </modules>
 
     <description>Hello World project for Spring Boot</description>
