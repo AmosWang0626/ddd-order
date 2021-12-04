@@ -2,6 +2,8 @@ package com.amos.mall.order.infrastructure.database.mapper;
 
 import com.amos.mall.order.infrastructure.database.model.OrderDO;
 
+import java.util.List;
+
 /**
  * 订单存储入库 Mapper
  *
@@ -25,5 +27,20 @@ public interface OrderMapper {
      * @return 数据库变更行数
      */
     int updateStatus(OrderDO orderDO);
+
+    /**
+     * 根据ID查询
+     *
+     * @param id 订单ID
+     * @return OrderDO
+     */
+    OrderDO findById(Long id);
+
+    /**
+     * 根据ID查询
+     *
+     * @return OrderDO List
+     */
+    List<OrderDO> findUnpaidOrder();
 
 }

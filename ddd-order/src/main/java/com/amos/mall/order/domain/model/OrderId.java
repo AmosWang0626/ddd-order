@@ -2,6 +2,7 @@ package com.amos.mall.order.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * 订单ID
@@ -11,6 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Accessors(chain = true)
 public class OrderId {
 
     private Long id;

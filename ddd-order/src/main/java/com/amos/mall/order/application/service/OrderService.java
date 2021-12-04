@@ -1,6 +1,7 @@
 package com.amos.mall.order.application.service;
 
 import com.amos.mall.order.api.model.CreateOrderParam;
+import com.amos.mall.order.domain.event.OrderPaidEvent;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -22,5 +23,17 @@ public interface OrderService {
      * @return true-创建成功
      */
     boolean create(@Valid @NotNull CreateOrderParam co);
+
+    /**
+     * 订单支付事件处理
+     *
+     * @param orderPaidEvent Event
+     */
+    void paid(OrderPaidEvent orderPaidEvent);
+
+    /**
+     * 自动取消订单
+     */
+    void autoCancel();
 
 }

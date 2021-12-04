@@ -4,6 +4,7 @@ import com.amos.mall.order.api.model.CreateOrderParam;
 import com.amos.mall.order.api.model.OrderStatus;
 import com.amos.mall.order.application.assembler.OrderAssembler;
 import com.amos.mall.order.application.service.OrderService;
+import com.amos.mall.order.domain.event.OrderPaidEvent;
 import com.amos.mall.order.domain.model.OrderEntity;
 import com.amos.mall.order.domain.service.OrderDomainService;
 import com.amos.mall.order.infrastructure.database.repository.OrderRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 订单应用服务
@@ -47,4 +50,30 @@ public class OrderServiceImpl implements OrderService {
         return true;
     }
 
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void paid(OrderPaidEvent orderPaidEvent) {
+        // 根据ID查询订单
+        OrderEntity orderEntity = orderRepository.findById(orderPaidEvent.getOrderId());
+        if (Objects.isNull(orderEntity)) {
+            return;
+        }
+
+        // 更新订单状态
+        orderEntity.setStatus(OrderStatus.PROCESSING.name());
+        orderRepository.updateStatus(orderEntity);
+
+        // 扣减库存
+        orderDomainService.reduceStock(orderEntity);
+    }
+
+    @Override
+    public void autoCancel() {
+        // 长时间未支付的订单自动取消
+        List<OrderEntity> unpaidOrder = orderRepository.findUnpaidOrder();
+        unpaidOrder.forEach(orderEntity -> {
+            orderEntity.setStatus(OrderStatus.CANCELED.name());
+            orderRepository.updateStatus(orderEntity);
+        });
+    }
 }

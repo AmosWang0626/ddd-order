@@ -33,7 +33,7 @@ public class InventoryApiImpl implements InventoryApi {
     }
 
     @Override
-    public boolean deductStock(Long goodsSkuId, Integer count) {
+    public boolean reduceStock(Long goodsSkuId, Integer count) {
         return RANDOM.nextBoolean();
     }
 

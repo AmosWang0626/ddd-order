@@ -1,6 +1,7 @@
 package com.amos.mall.order.infrastructure.convertor;
 
 import com.amos.mall.order.domain.model.OrderEntity;
+import com.amos.mall.order.domain.model.OrderId;
 import com.amos.mall.order.domain.model.OrderItem;
 import com.amos.mall.order.infrastructure.database.model.OrderDO;
 import com.amos.mall.order.infrastructure.database.model.OrderItemDO;
@@ -40,6 +41,31 @@ public class OrderConvertor {
         orderItemDO.setGoodsSkuId(orderItem.getGoodsSkuId());
         orderItemDO.setPurchaseCount(orderItem.getPurchaseCount());
         return orderItemDO;
+    }
+
+    public static OrderEntity toEntity(OrderDO orderDO) {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderId(new OrderId().setId(orderDO.getId()));
+        orderEntity.setStatus(orderDO.getStatus());
+        return orderEntity;
+    }
+
+    public static OrderEntity toEntity(OrderDO orderDO, List<OrderItemDO> orderItemList) {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderId(new OrderId().setId(orderDO.getId()));
+        orderEntity.setStatus(orderDO.getStatus());
+
+        List<OrderItem> orderItems = orderItemList.stream().map(OrderConvertor::toEntity).collect(Collectors.toList());
+        orderEntity.setOrderItems(orderItems);
+
+        return orderEntity;
+    }
+
+    public static OrderItem toEntity(OrderItemDO orderItemDO) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setGoodsSkuId(orderItemDO.getGoodsSkuId());
+        orderItem.setPurchaseCount(orderItemDO.getPurchaseCount());
+        return orderItem;
     }
 
 }

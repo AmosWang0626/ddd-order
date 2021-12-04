@@ -2,6 +2,8 @@ package com.amos.mall.order.infrastructure.database.mapper;
 
 import com.amos.mall.order.infrastructure.database.model.OrderItemDO;
 
+import java.util.List;
+
 /**
  * 订单条目存储入库 Mapper
  *
@@ -18,4 +20,11 @@ public interface OrderItemMapper {
      */
     int insert(OrderItemDO orderItemDO);
 
+    /**
+     * 根据订单ID查询订单条目
+     *
+     * @param orderId 订单ID
+     * @return 订单条目
+     */
+    List<OrderItemDO> findByOrderId(Long orderId);
 }

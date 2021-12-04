@@ -1,6 +1,7 @@
 package com.amos.mall.order.infrastructure.database.repository;
 
 import com.amos.mall.order.domain.model.OrderEntity;
+import com.amos.mall.order.domain.model.OrderId;
 import com.amos.mall.order.infrastructure.convertor.OrderConvertor;
 import com.amos.mall.order.infrastructure.exception.DatabaseException;
 import com.amos.mall.order.infrastructure.database.mapper.OrderItemMapper;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 订单资源库
@@ -44,6 +47,21 @@ public class OrderRepository {
 
         int modifyLines = orderMapper.updateStatus(orderDO);
         checkModifyLine(modifyLines, "修改订单状态失败!");
+    }
+
+    public OrderEntity findById(OrderId orderId) {
+        OrderDO orderDO = orderMapper.findById(orderId.getId());
+        if (Objects.isNull(orderDO)) {
+            return null;
+        }
+
+        List<OrderItemDO> orderItemList = orderItemMapper.findByOrderId(orderId.getId());
+        return OrderConvertor.toEntity(orderDO, orderItemList);
+    }
+
+    public List<OrderEntity> findUnpaidOrder() {
+        List<OrderDO> unpaidOrder = orderMapper.findUnpaidOrder();
+        return unpaidOrder.stream().map(OrderConvertor::toEntity).collect(Collectors.toList());
     }
 
     public void checkModifyLine(int lines, String message) {

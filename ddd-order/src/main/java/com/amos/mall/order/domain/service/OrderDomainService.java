@@ -57,4 +57,24 @@ public class OrderDomainService {
         }
     }
 
+    /**
+     * 扣减库存
+     *
+     * @param orderEntity 订单实体
+     */
+    public void reduceStock(OrderEntity orderEntity) {
+        List<OrderItem> deductedOrderItem = new ArrayList<>();
+        for (OrderItem orderItem : orderEntity.getOrderItems()) {
+            boolean lockResult = inventoryApi.reduceStock(orderItem.getGoodsSkuId(), orderItem.getPurchaseCount());
+            if (lockResult) {
+                deductedOrderItem.add(orderItem);
+                continue;
+            }
+            for (OrderItem item : deductedOrderItem) {
+                inventoryApi.addStock(item.getGoodsSkuId(), item.getPurchaseCount());
+            }
+
+            throw new BizException("扣减库存失败，请稍后重试吧～");
+        }
+    }
 }

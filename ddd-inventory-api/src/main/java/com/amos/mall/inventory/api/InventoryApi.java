@@ -42,7 +42,7 @@ public interface InventoryApi {
      * @param count      购买数量
      * @return true-扣减成功 false-扣减失败
      */
-    boolean deductStock(Long goodsSkuId, Integer count);
+    boolean reduceStock(Long goodsSkuId, Integer count);
 
     /**
      * 增加商品库存
